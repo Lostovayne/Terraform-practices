@@ -7,8 +7,18 @@ terraform {
   }
 }
 
+provider "aws" {
+   region = "us-east-1"
+
+
+}
+
 resource "aws_vpc" "demo_vpc" {
   cidr_block = "10.0.0.0/16"
+
+   tags = {
+   	Name ="Terraform VPC"
+   }
 }
 
 resource "aws_subnet" "public_subnet" {
@@ -25,7 +35,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.demo_vpc.id
 }
 
-resource "aws_route_table" "public_rt" {
+resource "aws_route_table" "public_rtb" {
   vpc_id = aws_vpc.demo_vpc.id
 
   route {
@@ -34,7 +44,7 @@ resource "aws_route_table" "public_rt" {
   }
 }
 
-resource "aws_route_table_association" "public_rt_assoc" {
+resource "aws_route_table_association" "public_subnet" {
   subnet_id      = aws_subnet.public_subnet.id
-  route_table_id = aws_route_table.public_rt.id
+  route_table_id = aws_route_table.public_rtb.id
 }
